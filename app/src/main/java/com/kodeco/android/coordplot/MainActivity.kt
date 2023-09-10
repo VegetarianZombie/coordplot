@@ -1,5 +1,6 @@
 package com.kodeco.android.coordplot
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -24,12 +25,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.VerticalAlignmentLine
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,8 +52,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun PlotSurface() {
-    var xPercentage: Float by remember { mutableFloatStateOf(0.5f) }
-    var yPercentage: Float by remember { mutableFloatStateOf(0.5f) }
+    var xPercentage: Float by rememberSaveable { mutableFloatStateOf(0.5f) }
+    var yPercentage: Float by rememberSaveable { mutableFloatStateOf(0.5f) }
     var updateXPercentage = fun(currentX: Float) {
         xPercentage = currentX;
     }
@@ -110,8 +113,15 @@ fun MapSlider(coord: Float, title: String, update: (Float) -> Unit) {
 
 @Composable
 fun Map(xPercent: Float, yPercent: Float, modifier: Modifier = Modifier) {
-    val boxWidth = 300
-    val boxHeight = 300
+    val config = LocalConfiguration.current
+    val boxWidth = when (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        true -> 200
+        false -> 300
+    }
+    val boxHeight = when (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        true -> 200
+        false -> 300
+    }
     val logoWidth = 45
     val logoHeight = 45
     val logoXCoord = (xPercent * (boxWidth - logoWidth))
