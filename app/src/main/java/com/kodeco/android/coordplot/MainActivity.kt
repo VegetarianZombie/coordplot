@@ -50,102 +50,14 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun PlotSurface() {
-    var xPercentage: Float by rememberSaveable { mutableFloatStateOf(0.5f) }
-    var yPercentage: Float by rememberSaveable { mutableFloatStateOf(0.5f) }
-    var updateXPercentage = fun(currentX: Float) {
-        xPercentage = currentX;
-    }
-    var updateYPercentage = fun(currentY: Float) {
-        yPercentage = currentY;
-    }
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = Color.White
-    ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(top = 16.dp)) {
-            Map(xPercent = xPercentage, yPercent = yPercentage)
-            MapSlider(
-                coord = xPercentage,
-                title = "X Axis",
-                update = updateXPercentage
-            )
-            MapSlider(
-                coord = yPercentage,
-                title = "Y Axis",
-                update = updateYPercentage
-            )
-        }
-    }
 
-}
 
 @Preview(showBackground = true)
 @Composable
-fun PlotSurfacePreview() {
+fun ActivityPreview() {
     MyApplicationTheme {
         PlotSurface()
     }
 }
 
-@Composable
-fun MapSlider(coord: Float, title: String, update: (Float) -> Unit) {
-    var amount = (coord * 100).toInt()
-    val sliderText = "$title: $amount%"
-    Row(horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(start = 16.dp, end = 16.dp)) {
-        Text(
-            text = sliderText, modifier = Modifier
-                .width(120.dp)
-        )
-        Slider(
-            value = coord,
-            onValueChange = update
-        )
-    }
-}
 
-@Composable
-fun Map(xPercent: Float, yPercent: Float, modifier: Modifier = Modifier) {
-    val config = LocalConfiguration.current
-    val boxWidth = when (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-        true -> 200
-        false -> 300
-    }
-    val boxHeight = when (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-        true -> 200
-        false -> 300
-    }
-    val logoWidth = 45
-    val logoHeight = 45
-    val logoXCoord = (xPercent * (boxWidth - logoWidth))
-    val logoYCoord = (yPercent * (boxHeight - logoHeight))
-
-    Box {
-        Box(
-            modifier = Modifier
-                .size(boxWidth.dp)
-                .background(Color.Black)
-        )
-        Image(painter = painterResource(id = R.drawable.kodeco_logo),
-              contentDescription = "Kodeco Logo",
-              modifier = Modifier
-                  .size(size = logoWidth.dp)
-                  .offset(logoXCoord.dp, logoYCoord.dp)
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MapPreview() {
-    MyApplicationTheme {
-        Map(xPercent = 0.5f, yPercent = 0.5f)
-    }
-}
