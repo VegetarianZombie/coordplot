@@ -13,6 +13,7 @@ Week 1:
 
 Added a very simple app that tracks the x,y coordinates
 
+![](images/week1.png)
 
 
 
